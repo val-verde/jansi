@@ -62,10 +62,18 @@ struct termios *getTermiosFields(JNIEnv *env, jobject lpObject, struct termios *
 	}
 #endif
 #if defined(HAVE_IOCTL)
+#if defined(__ANDROID__)
+	cfsetispeed(lpStruct, (*env)->GetLongField(env, lpObject, TermiosFc.c_ispeed));
+#else
 	lpStruct->c_ispeed = (*env)->GetLongField(env, lpObject, TermiosFc.c_ispeed);
 #endif
+#endif
 #if defined(HAVE_IOCTL)
+#if defined(__ANDROID__)
+	cfsetospeed(lpStruct, (*env)->GetLongField(env, lpObject, TermiosFc.c_ospeed));
+#else
 	lpStruct->c_ospeed = (*env)->GetLongField(env, lpObject, TermiosFc.c_ospeed);
+#endif
 #endif
 	return lpStruct;
 }
@@ -92,10 +100,18 @@ void setTermiosFields(JNIEnv *env, jobject lpObject, struct termios *lpStruct)
 	}
 #endif
 #if defined(HAVE_IOCTL)
+#if defined(__ANDROID__)
+	(*env)->SetLongField(env, lpObject, TermiosFc.c_ispeed, (jlong)cfgetispeed(lpStruct));
+#else
 	(*env)->SetLongField(env, lpObject, TermiosFc.c_ispeed, (jlong)lpStruct->c_ispeed);
 #endif
+#endif
 #if defined(HAVE_IOCTL)
+#if defined(__ANDROID__)
+	(*env)->SetLongField(env, lpObject, TermiosFc.c_ospeed, (jlong)cfgetospeed(lpStruct));
+#else
 	(*env)->SetLongField(env, lpObject, TermiosFc.c_ospeed, (jlong)lpStruct->c_ospeed);
+#endif
 #endif
 }
 #endif
